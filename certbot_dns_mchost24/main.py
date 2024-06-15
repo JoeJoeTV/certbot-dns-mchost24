@@ -57,6 +57,7 @@ class Authenticator(dns_common.DNSAuthenticator):
 class MCH24APIWrapper(object):
     
     def __init__(self, api_token: str):
+        logger.debug("[dns-mchost24] Creating API wrapper")
         self.api_client = MCHost24API(token = api_token)
     
     def _get_domains(self):
@@ -98,6 +99,7 @@ class MCH24APIWrapper(object):
         return id
     
     def add_txt_record(self, domain: str, record_name: str, record_content: str):
+        logger.debug(f"[dns-mchost24] Adding TXT record with name '{record_name}' for domain '{domain}'...")
         domain_id = self._get_domain_id(domain)
         
         try:
@@ -109,6 +111,7 @@ class MCH24APIWrapper(object):
             raise errors.PluginError("Error while creating DNS record.") from e
     
     def del_txt_record(self, domain: str, record_name: str, record_content: str):
+        logger.debug(f"[dns-mchost24] Trying to delete TXT record with name '{record_name}' for domain '{domain}'...")
         domain_id = self._get_domain_id(domain)
         records = self._get_dns_records(domain_id)
         
