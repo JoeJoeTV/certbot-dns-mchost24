@@ -37,18 +37,18 @@ class Authenticator(dns_common.DNSAuthenticator):
             "credentials",
             "MCHost24 API credentials INI file. Only API token "
             "authentication is supported",
-            {"api-token": "API token for the MCHost24 API"},
+            {"api_token": "API token for the MCHost24 API"},
         )
     
     def _perform(self, domain, validation_name, validation):
-        MCH24APIWrapper(self.credentials.conf("api-token")).add_txt_record(
+        MCH24APIWrapper(self.credentials.conf("api_token")).add_txt_record(
             domain,
             validation_name.replace("." + domain, ""),
             validation
         )
     
     def _cleanup(self, domain, validation_name, validation):
-        MCH24APIWrapper(self.credentials.conf("api-token")).del_txt_record(
+        MCH24APIWrapper(self.credentials.conf("api_token")).del_txt_record(
             domain,
             validation_name.replace("." + domain, ""),
             validation
