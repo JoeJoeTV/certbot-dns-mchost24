@@ -43,7 +43,7 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=install_requires,
+    install_requires=install_requirements,
     entry_points={
         "certbot.plugins": [
             "dns-mchost24 = certbot_dns_mchost24.main:Authenticator"
