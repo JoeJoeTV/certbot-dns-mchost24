@@ -22,7 +22,7 @@ class Authenticator(dns_common.DNSAuthenticator):
     @classmethod
     def add_parser_arguments(cls, add):
         super(Authenticator, cls).add_parser_arguments(
-            add, default_propagation_seconds = 120
+            add, default_propagation_seconds = 60
         )
         add("credentials", help="MCHost24 credentials INI file.")
     
