@@ -96,14 +96,17 @@ class MCH24APIWrapper(object):
         if id is None:
             raise errors.PluginError(f"Unknown domain: {components[-2]}.{components[-1]}")
         
-        return id
+        return id, components[:-2]
     
     def add_txt_record(self, domain: str, record_name: str, record_content: str):
-        logger.debug(f"[dns-mchost24] Adding TXT record with name '{record_name}' for domain '{domain}'...")
-        domain_id = self._get_domain_id(domain)
+        domain_id, subcomponents = self._get_domain_id(domain)
+        
+        record_name_components = [record_name] + subcomponents
+        
+        logger.debug(f"[dns-mchost24] Adding TXT record with name '{'.'.join(record_name_components)}' for domain '{domain}'...")
         
         try:
-            res = self.api_client.create_domain_dns_record(domain_id, record_name, DomainRecordType.TXT, record_content)
+            res = self.api_client.create_domain_dns_record(domain_id, '.'.join(record_name_components), DomainRecordType.TXT, record_content)
             
             if not res:
                 raise errors.PluginError(f"Creating DNS record failed: {res.message}")
@@ -111,13 +114,16 @@ class MCH24APIWrapper(object):
             raise errors.PluginError("Error while creating DNS record.") from e
     
     def del_txt_record(self, domain: str, record_name: str, record_content: str):
-        logger.debug(f"[dns-mchost24] Trying to delete TXT record with name '{record_name}' for domain '{domain}'...")
-        domain_id = self._get_domain_id(domain)
+        domain_id, subcomponents = self._get_domain_id(domain)
         records = self._get_dns_records(domain_id)
+        
+        full_record_name = '.'.join([record_name] + subcomponents)
+        
+        logger.debug(f"[dns-mchost24] Trying to delete TXT record with name '{full_record_name}' for domain '{domain}'...")
         
         id = None
         for r in records:
-            if r.sld == record_name:
+            if (r.sld == full_record_name) and (r.target == record_content):
                 id = r.id
         
         if id is None:
