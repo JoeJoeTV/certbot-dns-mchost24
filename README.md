@@ -15,3 +15,7 @@ A plugin for certbot that enables performing DNS validation using the MCHost24 A
     ```sh
     certbot certonly --authenticator dns-mchost24 --dns-mchost24-credentials /etc/letsencrypt/mchost24/mchost24.ini -d domain.com
     ```
+
+## Requirements
+
+Requires the MCHost24 API python module, which can be found [here](https://github.com/JoeJoeTV/mchost24-api-python).
